@@ -20,12 +20,12 @@ const App = () => {
   return (
     <Routes>
       <Route path='/' element={<Layout />}>
+        <Route element={<PersistLogin/>}>
           <Route index element={<Home />} />
           <Route path='login' element={<Login />} />
           <Route path='register' element={<Register />} />
           <Route path='collection/:id' element={<SingleCollection />} />
 
-        <Route element={<PersistLogin/>}>
           <Route element={<RequireAuth allowedRoles={ROLES.ADMIN} />}>
             <Route path="admin" element={<Admin />}/>
           </Route>

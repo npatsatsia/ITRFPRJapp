@@ -3,9 +3,9 @@ import useAuth from "../../hooks/useAuth";
 
 const RequireAuth = async ({ allowedRoles }) => {
     const { auth } = useAuth();
-    console.log(auth)
-
+    
     const isAuthorized = auth?.jwt && auth?.role.find(role => allowedRoles.includes(role));
+    console.log(auth)
     console.log(isAuthorized)
     return (
         isAuthorized
