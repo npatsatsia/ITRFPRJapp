@@ -23,7 +23,7 @@ const PersistLogin = () => {
 
 
         return () => isMounted = false
-    }, [auth?.jwt, refresh])
+    }, [])
 
 
     return (
