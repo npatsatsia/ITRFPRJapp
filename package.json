@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": "18.x",
-    "npm": "9.x"
+    "node": "v20.11.0",
+    "npm": "10.4.0"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
@@ -55,8 +55,5 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-react": "^7.23.3",
     "babel-preset-react-app": "^10.0.1"
-  },
-  "babel": {
-    "presets": ["react-app"]
   }
 }
