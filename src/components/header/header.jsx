@@ -63,7 +63,7 @@ const Header = () => {
                 <div style={{cursor: "pointer"}} onClick={() => {navigate("/collections")}}>
                   <b>My Collections</b>
                 </div>
-                  <div style={auth.role.includes('5150') ? {cursor: "pointer", display: "block"} : {display: 'none'}} onClick={() => {navigate("/admin")}}>
+                  <div style={auth.role.find(role => role === "5150") ? {cursor: "pointer", display: "block"} : {display: 'none'}} onClick={() => {navigate("/admin")}}>
                     <b>Admin Management</b> 
                   </div>
               </div>
