@@ -1,10 +1,10 @@
 import { Navigate, Outlet } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 
-const RequireAuth = async ({ allowedRoles }) => {
+const RequireAuth = ({ allowedRole }) => {
     const { auth } = useAuth();
     
-    const isAuthorized = auth?.jwt && auth?.role.find(role => allowedRoles.includes(role));
+    const isAuthorized = auth?.jwt && auth?.role.find(role => allowedRole === role);
     console.log(auth)
     console.log(isAuthorized)
     return (

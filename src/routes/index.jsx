@@ -26,11 +26,11 @@ const App = () => {
           <Route path='register' element={<Register />} />
           <Route path='collection/:id' element={<SingleCollection />} />
 
-          <Route element={<RequireAuth allowedRoles={ROLES.ADMIN} />}>
+          <Route element={<RequireAuth allowedRole={"5150"} />}>
             <Route path="admin" element={<Admin />}/>
           </Route>
 
-          <Route element={<RequireAuth allowedRoles={ROLES.USER} />}>
+          <Route element={<RequireAuth allowedRole={"2001"} />}>
             <Route path="collections" element={<User />}/>
           </Route>
         </Route>
