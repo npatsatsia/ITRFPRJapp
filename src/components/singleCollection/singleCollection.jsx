@@ -39,11 +39,11 @@ const SingleCollection = () => {
     const getCollection = async () => {
       try {
           setPageLoading(true)
-            const collectionResponse = await axiosPrivate.get(`/collections/${id}`)
+            const collectionResponse = await axiosPrivate.get(`/collection/${id}`)
+            setCollection(collectionResponse.data.collection)
             const allowedResponse = await axiosPrivate.get('/collections/allowed', collectionResponse.data.id)
 
             // setCustomFields(response.data.customFields)
-            setCollection(collectionResponse.data.collection)
             setReqData(collectionResponse.data.collection)
             setCustomFields(collectionResponse.data.sortedCustomFields)
             setCollectionImage(collectionResponse.data?.collection.image && collectionResponse.data.collection.image)

@@ -84,8 +84,8 @@ const Header = () => {
                   <button onClick={signOut}>Sign Out</button>
                 </div>
                 <div style={auth?.jwt ? {display: "none"} : {display: 'flex'}} className="nav-buttons">
-                    <button onClick={() => navigate('/login')}>Sign Up</button>
-                    <button onClick={() => navigate('/register')}>Sign In</button>
+                    <button onClick={() => navigate('/register')}>Sign Up</button>
+                    <button onClick={() => navigate('/login')}>Sign In</button>
                 </div>
               </div>
             </nav>
