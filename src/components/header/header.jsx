@@ -69,7 +69,9 @@ const Header = () => {
               </div>
             </div>
             <nav className="hader-navbar">
-              <h1 className="logo">PROJECT</h1>
+              <div onClick={() => navigate("/")}>
+                <h1 className="logo">PROJECT</h1>
+              </div>
               <div className='header-searchbar'>
                 <input type="text" placeholder="Search" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
                 <button>Search</button>
