@@ -5,6 +5,7 @@ const RequireAuth = ({ allowedRoles }) => {
     const { auth } = useAuth();
 
     const isAuthorized = auth?.jwt && auth?.role.find(role => allowedRoles.includes(role));
+    console.log(isAuthorized)
     return (
         isAuthorized
             ? <Outlet />
