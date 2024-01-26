@@ -1,7 +1,10 @@
 import { Navigate, Outlet } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import useRefreshToken from "../../hooks/useRefreshToken";
 
-const RequireAuth = ({ allowedRoles }) => {
+const RequireAuth = async ({ allowedRoles }) => {
+    const refresh = useRefreshToken()
+    await refresh()
     const { auth } = useAuth();
 
     const isAuthorized = auth?.jwt && auth?.role.find(role => allowedRoles.includes(role));
