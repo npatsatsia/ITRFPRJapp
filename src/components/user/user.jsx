@@ -7,6 +7,7 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import api from '../../api/axios'
 import noImage from '../../static/images/no-image.avif'
 import { List, Space } from 'antd';
+import { Link } from "react-router-dom/dist/umd/react-router-dom.development";
 
     
   const IconText = ({ icon, text }) => (
@@ -91,7 +92,7 @@ const User = () => {
                 }
               >
                 <List.Item.Meta
-                  title={<a href={`https://itrabackend-0a797af92f8e.herokuapp.com/collection/${collection.id}`}>{collection.name}</a>}
+                  title={<Link to={`/collection/${collection.id}`} >{collection.name}</Link>}
                   description={collection.description}
                 />{collection.description}
               </List.Item>)}
