@@ -1,0 +1,104 @@
+.admin-collections-filters {
+    width: 98%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f0f0f0;
+    padding: 7px;
+    border-radius: 8px;
+}
+
+.user-collections-container {
+    width: 98%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px;
+    border-radius: 8px;
+
+}
+
+.admin-collections-filters .search-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    width: 70%;
+    background-color: white;
+    padding: 5px;
+}
+
+.admin-collections-filters .search-container input {
+    width: 100%;
+    outline: none;
+    border: none;
+}
+
+.admin-collections-filters .filters {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    padding: 0 10px;
+}
+
+.admin-collections-filters button{
+    background-color: #4CAF50;
+    border: none;
+    outline: none;
+    height: 35px;
+    width: 75px;
+    border-radius: 5px;
+    color: white;
+}
+
+.collection-form .form-group select option :hover{
+    background-color: lightgray;
+}
+
+.image-upload {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.image-upload button {
+    padding: 6px 4px;
+    height: 80%;
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    border-radius: 5px;
+}
+
+.image-upload button:disabled {
+    background-color: lightslategrey;
+    color: gainsboro;
+    
+}
+
+.loader {
+    border: 10px solid #f3f3f3;
+    border-top: 10px solid #3498db;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  } 
+
+.upload-feedback .ok svg{
+    fill: green;
+}
+.upload-feedback .danger svg{
+    fill: red;
+}

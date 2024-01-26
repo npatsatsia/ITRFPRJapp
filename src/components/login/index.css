@@ -1,0 +1,15 @@
+.login-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #c6e2ff;
+}
+
+.login-section h2 {
+  padding-bottom: 35px;
+  font-size: 32px;
+}
+
+  

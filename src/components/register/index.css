@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+
+.reg-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; 
+    background-color: #c6e2ff;
+}
+
+.reg-section h2 {
+    padding-bottom: 35px;
+    font-size: 32px;
+    color: black;
+}
