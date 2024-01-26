@@ -60,9 +60,12 @@ const Header = () => {
                   <span>Nautilus: Pelagic Mollusc</span>
               </div>
               <div className={`header-right-section`}>
-                  <span>My Collections</span>
-                  <span>change view color</span>
-                  <span>change language</span>
+                <div style={{cursor: "pointer"}} onClick={() => {navigate("/collections")}}>
+                  <b>My Collections</b>
+                </div>
+                  <div style={auth.role.includes('5150') ? {cursor: "pointer", display: "block"} : {display: 'none'}} onClick={() => {navigate("/admin")}}>
+                    <b>Admin Management</b> 
+                  </div>
               </div>
             </div>
             <nav className="hader-navbar">
@@ -79,8 +82,8 @@ const Header = () => {
                   <button onClick={signOut}>Sign Out</button>
                 </div>
                 <div style={auth?.jwt ? {display: "none"} : {display: 'flex'}} className="nav-buttons">
-                    <button>Sign Up</button>
-                    <button>Sign In</button>
+                    <button onClick={() => navigate('/login')}>Sign Up</button>
+                    <button onClick={() => navigate('/register')}>Sign In</button>
                 </div>
               </div>
             </nav>
