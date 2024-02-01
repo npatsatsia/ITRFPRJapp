@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import './index.css'
-import AddCollectionModal from "./addCollectionModal";
+import AddCollectionModal from '../AddCollectionModal/addCollectionModal'
 import { AiOutlineSearch } from "react-icons/ai";
 import { LikeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons';
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";

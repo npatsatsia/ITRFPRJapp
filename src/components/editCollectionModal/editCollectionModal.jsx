@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import './index.css'
 import { UploadOutlined } from '@ant-design/icons';
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import api from '../../api/axios'
 import noImage from '../../static/images/no-image.avif'
+import { useNavigate } from "react-router-dom";
 import { 
     Modal,
     Button,
@@ -14,9 +15,10 @@ import {
     Card,
     message
   } from 'antd';
-import { useNavigate } from "react-router-dom";
 
-  const { TextArea } = Input;
+const { TextArea } = Input;
+const { Option } = Select;
+
   
 
 const EditCollectionModal = (
@@ -27,7 +29,9 @@ const EditCollectionModal = (
   setCollectionImage,
   collectionImage,
   reqData,
-  setReqData
+  setReqData,
+  selectedTags,
+  setSelectedTags
 }
 ) => {
 
@@ -35,12 +39,33 @@ const [confirmLoading, setConfirmLoading] = useState(false);
 const [categories, setCategories] = useState([])
 const [fileList, setFileList] = useState([]);
 const [uploadLoading, setUploadLoading] = useState(false)
-
+const [tags, setTags] = useState([]);
+const [tagInput, setTagInput] = useState('');
 
 const navigate = useNavigate()
 const axiosPrivate = useAxiosPrivate()
 
 const [form] = Form.useForm();
+
+
+const addTag = async (tag) => {
+  try {
+    await axiosPrivate.post('/tags', { tag });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// Fetch tags
+const fetchTags = async (searchTerm) => {
+  try {
+    const response = await axiosPrivate.get(`/tags/${searchTerm}`);
+    setTags(response.data);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 
 useEffect(() => {
   const getCategories = async () => {
@@ -53,6 +78,13 @@ useEffect(() => {
   };
   getCategories();
 }, []);
+
+useEffect(() => {
+  setReqData({
+    ...reqData,
+    tags: selectedTags
+  })
+}, [selectedTags])
 
 const handleOk = async (e) => {
   e.preventDefault();
@@ -83,9 +115,6 @@ const handleOk = async (e) => {
 };
 
 
-  const handleCancel = () => {
-  setOpenEditModal(false);
-};
 
 
 
@@ -97,45 +126,46 @@ const props = {
         setFileList([{ uid: '-1', name: file.name, status: 'uploading' }]);
         setUploadLoading(true)
     try {
-        const response = await axiosPrivate.post('/collections/image/upload', file, {
-            headers: {
-                'Content-Type': 'image/png, image/jpeg, image/jpg',
-                'X-Collection-ID': collection.id,
-                'X-Collection-Target': 'main_images',
-            },
-        });
-
-        let url = response.data.imageUrl;
-        let imageName = response.data.imageName
-        if(url) {
-          setCollectionImage(url)
+      const response = await axiosPrivate.post('/collections/image/upload', file, {
+        headers: {
+          'Content-Type': 'image/png, image/jpeg, image/jpg',
+          'X-Collection-ID': collection.id,
+          'X-Collection-Target': 'main_images',
+        },
+      });
+      
+      let url = response.data.imageUrl;
+      let imageName = response.data.imageName
+      if(url) {
+        setCollectionImage(url)
         setReqData({
             ...reqData,
             image: url,
-        })
+          })
         }
-
+        
         setFileList([{ uid: '-1', name: imageName, status: 'done', url }]);
         setUploadLoading(false)
         onSuccess('Ok');
-    } catch (err) {
+      } catch (err) {
         setFileList([]);
         setUploadLoading(false)
         onError('Error uploading file');
-    }
+      }
     },
     fileList,
-};
-
-const getFilenameFromUrl = (url)=> {
-  var urlObj = new URL(url);
+  };
   
-  var pathname = urlObj.pathname;
-  
-  var parts = pathname.split('/');
-  
-  var filename = parts[parts.length - 1];
-  
+  const getFilenameFromUrl = (url)=> {
+    if(url) {
+      var urlObj = new URL(url);
+      var pathname = urlObj.pathname;
+    
+    var parts = pathname.split('/');
+    
+    var filename = parts[parts.length - 1];
+    }
+    
   return filename;
 }
 
@@ -143,34 +173,74 @@ const deleteCollectionImage = async (collectionImage) => {
   getFilenameFromUrl(collectionImage)
   try {
     await axiosPrivate.post('/collections/image/delete', {imageName: fileList[0]?.name ? fileList[0]?.name : getFilenameFromUrl(collectionImage)},
-      {headers: {
-        'Content-Type': 'application/json',
+    {headers: {
+      'Content-Type': 'application/json',
         'X-Collection-Target': collection.id,
       }}
-    );
-    setCollectionImage('url')
-    setReqData({
+      );
+      setCollectionImage('url')
+      setReqData({
         ...reqData,
         image: '',
-    })
-    setFileList([]);
-  } catch (err) {
-  console.error('Error deleting file:', err);
+      })
+      setFileList([]);
+    } catch (err) {
+      console.error('Error deleting file:', err);
+    }
   }
-}
-
-const handleInputChange = (field, value) => {
-  setReqData({
+  
+  const handleInputChange = (field, value) => {
+    setReqData({
       ...reqData,
       [field]: value,
-  });
-};
-
-
-///  roca vshlit databazidanac ro cavshalot aitemis fotoebic da main fotoc
-
-
-
+    });
+  };
+  
+  // Debounce function
+  const debounce = (func, delay) => {
+    let timerId;
+    return (...args) => {
+      if (timerId) clearTimeout(timerId);
+      timerId = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  };
+  
+  // Debounced version of fetchTags
+  const debouncedFetchTags = useCallback(debounce(fetchTags, 1000), []);
+  
+  // Handle input change
+  const handleSearch = (value) => {
+    setTagInput(value);
+    if (value) {
+      debouncedFetchTags(value);
+    }
+  };
+  
+  // Handle tag selection
+  const handleChange = async (value) => {
+    setSelectedTags(value);
+    console.log(`selected ${value}`);
+    
+    // Check if the selected tag exists in the tags state
+    if (!tags.some((tag) => tag.tag === value)) {
+      // If the tag doesn't exist, add it to the MongoDB collection
+      await addTag(value[value.length - 1]?.toString());
+      // Fetch tags again to update the tags state
+      await fetchTags(value);
+    }
+  };
+  
+  
+  const handleCancel = async () => {
+    await deleteCollectionImage()
+    setOpenEditModal(false);
+  };
+  ///  roca vshlit databazidanac ro cavshalot aitemis fotoebic da main fotoc
+  
+  
+  
 
 
   return (
@@ -250,6 +320,22 @@ const handleInputChange = (field, value) => {
                     Delete
                 </Button>
             </Form.Item>
+            <Form.Item label="Tags #" required={false}>
+            <Select
+              mode="tags"
+              style={{ width: '100%' }}
+              placeholder="Tags"
+              onSearch={handleSearch}
+              onChange={handleChange}
+              value={selectedTags}
+            >
+              {tags.map((tag) => (
+                <Option key={tag._id} value={tag.tag}>
+                  {tag.tag}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
           </Form>
         </>
       </Modal>

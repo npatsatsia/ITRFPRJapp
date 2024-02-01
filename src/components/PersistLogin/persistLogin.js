@@ -27,11 +27,6 @@ const PersistLogin = () => {
         return () => isMounted = false
     }, [])
 
-    useEffect(() => {
-        console.log(isLoading)
-        console.log(JSON.stringify(auth.jwt))
-    },[isLoading])
-
 
     return (
         <>

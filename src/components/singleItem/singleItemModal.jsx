@@ -1,5 +1,6 @@
 import React from 'react';
-import { Modal } from 'antd';
+import { Modal, Checkbox } from 'antd';
+import './index.css'
 // import { useSearchParams } from 'react-router-dom';
 
 
@@ -20,20 +21,23 @@ const SingleItemModal = ({
   //   setSearchParams({
   //     item: ''
   // })
+  console.log(singleItem)
     setShowItem(false);
   };
   return (
-      <Modal width={1200} title="Basic Modal" open={showItem} onOk={() => setShowItem(false)} onCancel={handleCancel}>
+      <Modal width={1200} open={showItem} onOk={() => setShowItem(false)} onCancel={handleCancel}>
         <div className="single-item-container">
-          <h1>{collection?.name}</h1>
           <div className="item-image-container">
             <img src={singleItem.imageUrl} alt="item" />
           </div>
-          <div className="items-common-description">
-            <span>{collection?.description}</span>
-          </div>
           <div className="item-fields-container">
-
+            {singleItem?.fields &&
+              Object.entries(singleItem.fields).map(([key, value]) => (
+                <div key={key} className="field" style={value.length > 20 ? { display: "flex", flexDirection: "column" } : {}} >
+                  <b className="field-key">{typeof(value) === "boolean" ? key : key + ": "}</b>
+                  <span className="field-value">{value} {typeof(value) === "boolean" && <Checkbox checked/>}</span>
+                </div>
+              ))}
           </div>
         </div>
       </Modal>

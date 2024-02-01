@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://itrabackend-0a797af92f8e.herokuapp.com';
+const BASE_URL = 'http://localhost:3500';
 
 export default axios.create({baseURL: BASE_URL})
 

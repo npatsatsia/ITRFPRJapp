@@ -2,11 +2,20 @@ import React, { useEffect, useState } from 'react'
 import './index.css'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
-import { Dropdown, message, Modal } from 'antd';
-import { EditOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import EditCollectionModal from './editCollectionModal';
-import AddItemModal from './addItemModal';
-import SingleItemModal from '../singleItem';
+import { Dropdown, message, Modal, Card, Space } from 'antd';
+import { EditOutlined, PlusOutlined, DeleteOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons';
+import EditCollectionModal from '../editCollectionModal/editCollectionModal';
+import AddItemModal from '../addItemModal/addItemModal';
+import SingleItemModal from '../singleItem/singleItemModal';
+
+const IconText = ({ icon, text }) => (
+  <div style={{ border: "1px solid #ccc", borderRadius: "8px", padding: "2px 4px" }}>
+    <Space>
+      {React.createElement(icon)}
+      {text}
+    </Space>
+  </div>
+);
 
 const SingleCollection = () => {
   const [collection, setCollection] = useState({})
@@ -16,6 +25,7 @@ const SingleCollection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteisLoading, setDeleteIsLoading] = useState(false)
   const [collectionImage, setCollectionImage] = useState('url')
+  const [selectedTags, setSelectedTags] = useState([]);
   const [pageLoading, setPageLoading] = useState(false)
   const [itemsLoading, setItemsLoading] = useState(false)
   const [openEditModal, setOpenEditModal] = useState(false)
@@ -47,6 +57,7 @@ const SingleCollection = () => {
             setReqData(collectionResponse.data.collection)
             setCustomFields(collectionResponse.data.sortedCustomFields)
             setCollectionImage(collectionResponse.data?.collection.image && collectionResponse.data.collection.image)
+            setSelectedTags(collectionResponse.data.collection.tags)
             setAllowedToEdit(allowedResponse.data)
 
         } catch (error) {
@@ -100,7 +111,7 @@ const handleCancel = () => {
 
 const items = [
   {
-    label: 'Edit Collections',
+    label: 'Edit Collection',
     key: '1',
     icon: <EditOutlined />,
     onClick: () => setOpenEditModal(true)
@@ -150,6 +161,8 @@ const handleClickItem = async (itemId) => {
             collectionImage={collectionImage}
             reqData={reqData}
             setReqData={setReqData}
+            setSelectedTags={setSelectedTags}
+            selectedTags={selectedTags}
           />
         )}
         {collection && (
@@ -182,12 +195,17 @@ const handleClickItem = async (itemId) => {
                 <h1>{collection.name}</h1>
               </div>
               <div className="collection-creator-h">
-                <h2>Collection Belongs To: {collection.name}</h2>
+                <h2>Collection Belongs To: {collection.ownerUsername}</h2>
               </div>
               <div className="collection-description-h">
                 <span>{collection.description}</span>
               </div>
             </div>
+            <ul className="collection-tags-container">
+              {selectedTags?.map((tag) => {
+                return <li>#{tag}</li>
+              })}
+            </ul>
           </div>
           {
           allowedToEdit &&
@@ -206,17 +224,25 @@ const handleClickItem = async (itemId) => {
               {itemsData.map(item => {
                 return  <li className='items-li'
                           key={item.id}
-                          onClick={() => {handleClickItem(item.id)}}
                           style={{cursor: "pointer"}}
                         >
-                        <div className="single-item-container">
-                          <img src={item.imageUrl} alt="" />
-                          <div className="overlay">
-                            <span>50 likes</span>
-                            <span>50 comments</span>
-                          </div>
-                        </div>
-                      </li>
+                          <Card
+                            hoverable
+                            style={{
+                              width: 300,
+                              border: "2px solid #f0f0f0",
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "center"
+                            }}
+                            cover={<img alt="item" src={item.imageUrl} style={{width: "98%"}} onClick={() => {handleClickItem(item.id)}} />}
+                          >
+                            <div style={{padding: "8px", display: "flex", justifyContent: "space-around" }}>
+                              <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />
+                              <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />
+                            </div>
+                          </Card>
+                        </li>
               })}
             </ul>
           </div>}

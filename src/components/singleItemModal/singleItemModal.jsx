@@ -24,7 +24,7 @@ const SingleItemModal = ({
     setShowItem(false);
   };
   return (
-      <Modal width={1200} title="Basic Modal" open={showItem} onOk={() => setShowItem(false)} onCancel={handleCancel}>
+      <Modal width={1200} title="" open={showItem} onOk={() => setShowItem(false)} onCancel={handleCancel}>
         <div className="single-item-container">
           <h1>{collection?.name}</h1>
           <div className="item-image-container">
