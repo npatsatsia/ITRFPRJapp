@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './index.css'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
-import { Dropdown, message, Modal, Card, Space } from 'antd';
+import { Dropdown, message, Modal, Switch, Table, Space, Checkbox } from 'antd';
 import { EditOutlined, PlusOutlined, DeleteOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons';
 import EditCollectionModal from '../editCollectionModal/editCollectionModal';
 import AddItemModal from '../addItemModal/addItemModal';
@@ -33,6 +33,8 @@ const SingleCollection = () => {
   const [reqData, setReqData] = useState({})
   const [singleItem, setSingleItem] = useState({})
   const [showItem, setShowItem] = useState(false)
+  const [allComments, setAllComments] = useState([])
+  const [fixedTop, setFixedTop] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams()
 
   const params = Object.fromEntries([...searchParams]);
@@ -89,7 +91,6 @@ const handleButtonClick = (e) => {
 };
 
 const handleOnDelete = async () => {
-  console.log(typeof(id))
   setDeleteIsLoading(true) 
   try{
     const response = await axiosPrivate.delete(`/collections/${id}`)
@@ -132,20 +133,77 @@ const menuProps = {
 const handleClickItem = async (itemId) => {
   try{
     const response = await axiosPrivate.get(`/items/item/${itemId}`)
-    
+    const commentsResponse = await axiosPrivate.get(`/comments/${itemId}`);
+
     setSingleItem(response.data)
     if(response.status === 200) {
       setSearchParams({
         ...params,
         item: itemId
     })
+      setAllComments([commentsResponse.data])
       setShowItem(true)
     }
   }catch(err) {
     console.error(err)
-    message.info(err);
+    // message.info(err);
   }
 }
+
+const columns = collection?.customFields
+  ? [
+      // Fixed column for Image
+      {
+        title: "Image",
+        dataIndex: "image",
+        key: "image",
+        width: 100,
+        padding: 0,
+        fixed: 'left',  // Set to 'left' to make it a sticky column on the left
+        render: (text, record) => (
+          <img src={record.image} onClick={() => {handleClickItem(record.key)}} alt="item" style={{ width: "100px", height: "100px", objectFit: "contain", cursor: "pointer" }} />
+        ),
+      },
+      // Dynamically generated columns based on customFields
+      ...Object.entries(collection.customFields)
+        .filter(([key]) => key.endsWith("name"))
+        .map(([key, value]) => ({
+          title: value,
+          dataIndex: value,
+          key,
+          width: 150,
+          ellipsis: true,  // Enable ellipsis for long text
+          render: (text) => (
+            <span title={text}>{text}</span>
+          ),
+        })),
+    ]
+  : [];
+
+
+// Create an array with a single object using the fields as key-value pairs
+const data = itemsData.map((item) => {
+  const rowData = {
+    key: item.id,
+    image: item.imageUrl,
+  };
+
+  // Process item.fields and convert boolean values to checkboxes
+  Object.entries(item.fields).forEach(([key, value]) => {
+    if (typeof value === 'boolean') {
+      rowData[key] = <Checkbox checked={value} readOnly />;
+    } else if (typeof value === 'string') {
+      // Check if it's a date-related field and split with 'T'
+      const isDateField = key.toLowerCase().includes('date') || key.toLowerCase().includes('time');
+      rowData[key] = isDateField && value.includes("T") ? value.split("T")[0] : value;
+    } else {
+      rowData[key] = value;  // Keep the original value for other types
+    }
+  });
+
+  return rowData;
+});
+
 
   return (
     pageLoading? <div>...Loading</div> : 
@@ -182,6 +240,8 @@ const handleClickItem = async (itemId) => {
             showItem={showItem} 
             setShowItem={setShowItem}
             singleItem={singleItem}
+            setAllComments={setAllComments}
+            allComments={allComments? allComments : []}
           />
         )}
         <div className="single-collection-container">
@@ -220,7 +280,20 @@ const handleClickItem = async (itemId) => {
             itemsLoading? <div>Loading</div> :
           <div className="items-container">
             <h2>Collection Items</h2>
-            <ul className="items-ul">
+
+            <Table
+              columns={columns}
+              dataSource={data}
+              scroll={{
+                x: 1500,
+              }}
+              sticky={{
+                offsetHeader: 0,
+              }}
+            />
+
+
+            {/* <ul className="items-ul">
               {itemsData.map(item => {
                 return  <li className='items-li'
                           key={item.id}
@@ -244,7 +317,7 @@ const handleClickItem = async (itemId) => {
                           </Card>
                         </li>
               })}
-            </ul>
+            </ul> */}
           </div>}
         </div>
       </section> : navigate("/collections")

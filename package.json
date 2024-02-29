@@ -1,9 +1,9 @@
 {
-  "name": "itraapp",
+  "name": "my-app",
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": "18.x",
+    "node": "v20.11.0",
     "npm": "10.4.0"
   },
   "dependencies": {

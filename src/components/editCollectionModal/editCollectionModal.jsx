@@ -221,7 +221,6 @@ const deleteCollectionImage = async (collectionImage) => {
   // Handle tag selection
   const handleChange = async (value) => {
     setSelectedTags(value);
-    console.log(`selected ${value}`);
     
     // Check if the selected tag exists in the tags state
     if (!tags.some((tag) => tag.tag === value)) {

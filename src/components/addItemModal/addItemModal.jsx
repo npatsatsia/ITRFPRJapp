@@ -42,8 +42,8 @@ const AddItemModal = ({setOpenAddItemModal, openAddItemModal, collection, custom
 
   const onValuesChange = (changedValues, allValues) => {
     // You can do additional logic here if needed
-    console.log('Changed Values:', changedValues);
-    console.log('All Values:', allValues);
+    // console.log('Changed Values:', changedValues);
+    // console.log('All Values:', allValues);
   };
 
   const handleCancel = async () => {

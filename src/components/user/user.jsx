@@ -70,7 +70,6 @@ const User = () => {
               size="large"
               pagination={{
                 onChange: (page) => {
-                  console.log(page);
                 },
                 pageSize: 3,
               }}

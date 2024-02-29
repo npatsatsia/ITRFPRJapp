@@ -149,7 +149,6 @@ const AddCollectionModal = ({open, setOpen, categories}) => {
 
   const handleInputChange = (field, value) => {
     if (field.startsWith("custom_")) {
-      console.log(value)
       if (value === undefined) {
         // If the value is undefined, remove the field from reqData
         const fieldNameParts = field.split('_');
@@ -213,7 +212,6 @@ const AddCollectionModal = ({open, setOpen, categories}) => {
   // Handle tag selection
   const handleChange = async (value) => {
     setSelectedTags(value);
-    console.log(`selected ${value}`);
   
     // Check if the selected tag exists in the tags state
     if (!tags.some((tag) => tag.tag === value)) {
